@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter, usePathname } from 'next/navigation';
-const API_URL = process.env.NEXT_PUBLIC_API_URL!;
+const API_URL = "https://insightforge-2.onrender.com";
 export interface User {
   id: number;
   name: string;
