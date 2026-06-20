@@ -72,6 +72,12 @@ app.use('/uploads', express.static(uploadsDir));
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'InsightForge Backend' });
 });
+app.get("/", (req, res) => {
+  res.json({
+    status: "success",
+    message: "InsightForge API is running"
+  });
+});
 
 // Authentication Routes
 app.post('/api/auth/signup', signup);
