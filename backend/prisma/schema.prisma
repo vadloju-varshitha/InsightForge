@@ -1,0 +1,160 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+enum CompanyRole {
+  OWNER
+  MANAGER
+  ANALYST
+}
+
+enum ReportStatus {
+  Requested
+  Processing
+  Ready
+}
+
+model Company {
+  id         Int      @id @default(autoincrement())
+  name       String
+  created_at DateTime @default(now())
+  users      User[]
+  reports    Report[]
+}
+
+model User {
+  id                 Int                 @id @default(autoincrement())
+  name               String
+  email              String              @unique
+  password           String
+  company_name       String?
+  industry           String?
+  role               UserRole            @default(CLIENT)
+  companyRole        CompanyRole         @default(OWNER)
+  credits            Int                 @default(3) // Seed with 3 credits for evaluation
+  created_at         DateTime            @default(now())
+  company_id         Int?
+  company            Company?            @relation(fields: [company_id], references: [id])
+  reports            Report[]
+  creditTransactions CreditTransaction[]
+  notifications      Notification[]
+  savedLocations     SavedLocation[]
+  auditLogs          AuditLog[]
+}
+
+model Report {
+  id                Int          @id @default(autoincrement())
+  user_id           Int
+  user              User         @relation(fields: [user_id], references: [id])
+  company_id        Int?
+  company           Company?     @relation(fields: [company_id], references: [id])
+  location_name     String
+  latitude          Float
+  longitude         Float
+  business_type     String       // e.g. "Grocery", "Pharmacy"
+  store_size        Int          // in sq ft
+  investment_amount Int          // in USD / INR
+  target_audience   String       // e.g. "Family", "Students"
+  status            ReportStatus @default(Requested)
+  footfall_estimate Int?
+  confidence_score  Int?         // 0 - 100 percentage
+  pdf_url           String?
+  executive_summary String?      @db.Text
+  custom_sections   Json?        // Selected sections list
+  brand_settings    Json?        // White label brand settings (logo, color)
+  industry_avg      String?      // Industry Benchmarking: "Above Average", "Average", "Below Average"
+  sentiment_pos     Float?       // Sentiment analysis percentages
+  sentiment_neu     Float?
+  sentiment_neg     Float?
+  live_metrics      Json?        // Live location intelligence parsed data
+  created_at        DateTime     @default(now())
+  updated_at        DateTime     @updatedAt
+}
+
+model Demographic {
+  id                Int      @id @default(autoincrement())
+  city              String
+  locality          String
+  population        Int
+  income_level      String   // "Low", "Middle", "Upper Middle", "High"
+  density           Int      // per sq km
+  male_percentage   Float
+  female_percentage Float
+  age_18_25         Float
+  age_26_40         Float
+  age_41_60         Float
+  age_60_plus       Float
+  created_at        DateTime @default(now())
+
+  @@unique([city, locality])
+}
+
+model Competitor {
+  id         Int      @id @default(autoincrement())
+  name       String
+  category   String   // "Grocery", "Pharmacy", "Fashion", "Electronics", "Restaurants", "Healthcare"
+  latitude   Float
+  longitude  Float
+  rating     Float
+  city       String
+  locality   String
+  created_at DateTime @default(now())
+}
+
+model CreditTransaction {
+  id             Int      @id @default(autoincrement())
+  user_id        Int
+  user           User     @relation(fields: [user_id], references: [id])
+  amount         Int
+  transaction_id String   @unique
+  type           String   // "PURCHASE", "USAGE", "REFUND"
+  timestamp      DateTime @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  user      User     @relation(fields: [user_id], references: [id])
+  message   String   @db.Text
+  status    String   // "SENT", "FAILED"
+  channel   String   // "EMAIL", "TELEGRAM"
+  timestamp DateTime @default(now())
+}
+
+model SavedLocation {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  user       User     @relation(fields: [user_id], references: [id])
+  name       String
+  latitude   Float
+  longitude  Float
+  created_at DateTime @default(now())
+}
+
+model ComparisonHistory {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  title      String
+  report_ids Json     // JSON array of report IDs compared
+  created_at DateTime @default(now())
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  user_id    Int?
+  user       User?    @relation(fields: [user_id], references: [id])
+  action     String
+  target     String
+  ip_address String?
+  timestamp  DateTime @default(now())
+}
