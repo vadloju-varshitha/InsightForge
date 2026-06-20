@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter, usePathname } from 'next/navigation';
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 export interface User {
   id: number;
   name: string;
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       // Fetch user profile
       axios
-        .get('http://localhost:5000/api/auth/me')
+        .get(`${API_URL}/api/auth/me`)
         .then((res) => {
           setUser(res.data.user);
         })
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const res = await axios.post(`${API_URL}/api/auth/login`, { email, password });
       const { token: receivedToken, user: receivedUser } = res.data;
       
       localStorage.setItem('insightforge_token', receivedToken);
@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     companyRole?: 'OWNER' | 'MANAGER' | 'ANALYST'
   ) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/signup', {
+      const res = await axios.post(`${API_URL}/api/auth/signup`, {
         name,
         email,
         password,
@@ -149,7 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/auth/me');
+      const res = await axios.get(`${API_URL}/api/auth/me`);
       setUser(res.data.user);
     } catch (err) {
       console.error('Failed to refresh user profile:', err);
