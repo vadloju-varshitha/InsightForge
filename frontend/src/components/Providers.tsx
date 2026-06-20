@@ -5,11 +5,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '../context/AuthContext';
 import axios from 'axios';
 
-// Configure Axios global interceptor to dynamically rewrite localhost:5000 in production
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+// Configure Axios global interceptor 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://insightforge-2.onrender.com';
 axios.interceptors.request.use((config) => {
-  if (config.url && config.url.startsWith('http://localhost:5000')) {
-    config.url = config.url.replace('http://localhost:5000', API_URL);
+  if (config.url && config.url.startsWith('https://insightforge-2.onrender.com')) {
+    config.url = config.url.replace('https://insightforge-2.onrender.com', API_URL);
   }
   return config;
 });

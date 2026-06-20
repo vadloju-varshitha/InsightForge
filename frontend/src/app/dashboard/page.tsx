@@ -30,7 +30,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import Link from 'next/link';
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://insightforge-2.onrender.com';
 const COLORS = ['#1E3A8A', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
 
 export default function DashboardPage() {
@@ -40,7 +40,7 @@ export default function DashboardPage() {
   const { data: reports = [], isLoading: reportsLoading, error: reportsError } = useQuery({
     queryKey: ['reports'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/reports');
+      const res = await axios.get('${API_URL}/api/reports');
       return res.data;
     },
   });
@@ -49,7 +49,7 @@ export default function DashboardPage() {
   const { data: transactions = [], isLoading: txLoading } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/credits/history');
+      const res = await axios.get('${API_URL}/api/credits/history');
       return res.data;
     },
   });
@@ -58,7 +58,7 @@ export default function DashboardPage() {
   const { data: alerts = [] } = useQuery({
     queryKey: ['locationAlerts'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/reports/alerts/check');
+      const res = await axios.get('${API_URL}/api/reports/alerts/check');
       return res.data;
     },
     refetchInterval: 30000, // Poll alerts every 30 seconds

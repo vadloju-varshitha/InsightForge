@@ -16,7 +16,7 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react';
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://insightforge-2.onrender.com';
 // Dynamically import LocationMap with SSR disabled to prevent hydration errors
 const LocationMap = dynamic(() => import('../../../components/LocationMap'), {
   ssr: false,
@@ -175,7 +175,7 @@ export default function NewReportPage() {
       : addressSearch || 'Jubilee Hills, Hyderabad';
 
     try {
-      const res = await axios.post('http://localhost:5000/api/reports', {
+      const res = await axios.post('${API_URL}/api/reports', {
         location_name: locationName,
         latitude,
         longitude,

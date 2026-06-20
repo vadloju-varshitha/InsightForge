@@ -32,7 +32,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://insightforge-2.onrender.com';
 // Dynamically import LocationMap with SSR disabled to prevent hydration errors
 const LocationMap = dynamic(() => import('../../../components/LocationMap'), {
   ssr: false,

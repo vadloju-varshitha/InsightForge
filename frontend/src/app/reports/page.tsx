@@ -19,7 +19,7 @@ import {
   Bookmark,
 } from 'lucide-react';
 import Link from 'next/link';
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://insightforge-2.onrender.com';
 export default function ReportsHistoryPage() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,7 +31,7 @@ export default function ReportsHistoryPage() {
   const { data: reports = [], isLoading: reportsLoading } = useQuery({
     queryKey: ['reports', searchTerm, categoryFilter, statusFilter, sortBy],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/reports', {
+      const res = await axios.get('${API_URL}/api/reports', {
         params: {
           search: searchTerm || undefined,
           business_type: categoryFilter || undefined,
@@ -48,7 +48,7 @@ export default function ReportsHistoryPage() {
   const { data: savedLocations = [], isLoading: savedLoading } = useQuery({
     queryKey: ['savedLocations'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/reports/saved');
+      const res = await axios.get('${API_URL}/api/reports/saved');
       return res.data;
     },
   });
@@ -56,7 +56,7 @@ export default function ReportsHistoryPage() {
   // 3. Remove Saved Location Mutation
   const deleteSavedLocationMutation = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`http://localhost:5000/api/reports/saved/${id}`);
+      await axios.delete(`${API_URL}/api/reports/saved/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['savedLocations'] });
