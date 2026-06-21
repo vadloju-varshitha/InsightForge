@@ -73,7 +73,7 @@ export default function ReportDetailPage() {
   // Extract locality and city names
   let city = 'Hyderabad';
   let locality = 'Jubilee Hills';
-  if (report) {
+  if (report?.location_name) {
     const parts = report.location_name.split(',').map((s: string) => s.trim());
     if (parts.length >= 2) {
       locality = parts[0];
@@ -253,7 +253,7 @@ export default function ReportDetailPage() {
   };
 
   // Custom branding adjustments
-  const brandColor = (report.brand_settings as any)?.primaryColor || '#1E3A8A';
+  const brandColor = (report?.brand_settings as any)?.primaryColor || '#1E3A8A';
 
   return (
     <DashboardLayout>
@@ -796,13 +796,6 @@ export default function ReportDetailPage() {
               {/* SVG Vector Gauge */}
               <svg viewBox="0 0 100 60" className="w-32 h-20">
                 <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="#e2e8f0" strokeWidth="8" strokeLinecap="round" />
-                <path 
-                  d="M 10 55 A 40 40 0 0 1 ${50 + 40 * Math.cos(((report.confidence_score / 100) * 180 - 180) * (Math.PI / 180))} ${55 + 40 * Math.sin(((report.confidence_score / 100) * 180 - 180) * (Math.PI / 180))}" 
-                  fill="none" 
-                  stroke="#10B981" 
-                  strokeWidth="8" 
-                  strokeLinecap="round" 
-                />
                 <circle cx="50" cy="55" r="3" fill="#1E3A8A" />
                 <text x="50" y="45" fontSize="10" fill="#1e293b" textAnchor="middle" fontWeight="bold">
                   {report.confidence_score || 85}%
