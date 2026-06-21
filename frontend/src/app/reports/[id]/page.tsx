@@ -164,7 +164,25 @@ export default function ReportDetailPage() {
 
   // Removed Mapbox script rendering effects
 
-  if (reportLoading) {
+   // Client-side filtering and sorting of competitors
+  const processedCompetitors = React.useMemo(() => {
+    return competitors
+      .filter((c: any) => c.distance <= maxDistance)
+      .sort((a: any, b: any) => {
+        const valA = a.distance || 0;
+        const valB = b.distance || 0;
+
+        if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+        if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+        return 0;
+      });
+  }, [competitors, maxDistance, sortOrder]);
+
+  const densityScore = React.useMemo(() => {
+    return report?.live_metrics?.competitorDensityScore ?? Math.min(100, competitors.length * 10);
+  }, [report, competitors]);
+
+    if (reportLoading) {
     return (
       <DashboardLayout>
         <div className="h-96 w-full flex flex-col items-center justify-center">
@@ -174,7 +192,7 @@ export default function ReportDetailPage() {
       </DashboardLayout>
     );
   }
-
+  
   if (reportError || !report) {
     return (
       <DashboardLayout>
@@ -197,24 +215,6 @@ export default function ReportDetailPage() {
     { name: 'Male', value: demographic.male_percentage },
     { name: 'Female', value: demographic.female_percentage },
   ] : [];
-
-  // Client-side filtering and sorting of competitors
-  const processedCompetitors = React.useMemo(() => {
-    return competitors
-      .filter((c: any) => c.distance <= maxDistance)
-      .sort((a: any, b: any) => {
-        const valA = a.distance || 0;
-        const valB = b.distance || 0;
-
-        if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
-        if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
-        return 0;
-      });
-  }, [competitors, maxDistance, sortOrder]);
-
-  const densityScore = React.useMemo(() => {
-    return report?.live_metrics?.competitorDensityScore ?? Math.min(100, competitors.length * 10);
-  }, [report, competitors]);
 
   const downloadCSV = () => {
     const headers = [
