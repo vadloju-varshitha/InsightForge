@@ -59,7 +59,7 @@ export default function ReportDetailPage() {
   const { data: report, isLoading: reportLoading, error: reportError } = useQuery({
     queryKey: ['report', id],
     queryFn: async () => {
-      const res = await axios.get(`https://insightforge-2.onrender.com/api/reports/${id}`);
+      const res = await axios.get(`${API_URL}/api/reports/${id}`);
       return res.data;
     },
     enabled: !!id,
@@ -87,7 +87,7 @@ export default function ReportDetailPage() {
   const { data: demographic, isLoading: demoLoading } = useQuery({
     queryKey: ['demographic', city, locality],
     queryFn: async () => {
-      const res = await axios.get('https://insightforge-2.onrender.com/api/demographics/details', {
+      const res = await axios.get('${API_URL}/api/demographics/details', {
         params: { city, locality },
       });
       return res.data;
@@ -99,7 +99,7 @@ export default function ReportDetailPage() {
   const { data: competitors = [], isLoading: competitorsLoading } = useQuery({
     queryKey: ['competitors', report?.latitude, report?.longitude, activeCategory],
     queryFn: async () => {
-      const res = await axios.get('https://insightforge-2.onrender.com/api/competitors/nearby', {
+      const res = await axios.get('${API_URL}/api/competitors/nearby', {
         params: {
           lat: report.latitude,
           lng: report.longitude,
@@ -118,7 +118,7 @@ export default function ReportDetailPage() {
   const { data: savedLocations = [] } = useQuery({
     queryKey: ['savedLocations'],
     queryFn: async () => {
-      const res = await axios.post('https://insightforge-2.onrender.com/api/reports/saved');
+      const res = await axios.post('${API_URL}/api/reports/saved');
       return res.data;
     },
   });
@@ -145,11 +145,11 @@ export default function ReportDetailPage() {
             Math.abs(loc.longitude - report.longitude) < 0.0001
         );
         if (savedItem) {
-          await axios.delete(`https://insightforge-2.onrender.com/api/reports/saved/${savedItem.id}`);;
+          await axios.delete(`${API_URL}/api/reports/saved/${savedItem.id}`);;
           setIsSaved(false);
         }
       } else {
-          await axios.post('https://insightforge-2.onrender.com/api/reports/saved', {
+          await axios.post('${API_URL}/api/reports/saved', {
           name: report.location_name,
           latitude: report.latitude,
           longitude: report.longitude,
@@ -192,7 +192,7 @@ export default function ReportDetailPage() {
       </DashboardLayout>
     );
   }
-  
+
   if (reportError || !report) {
     return (
       <DashboardLayout>
