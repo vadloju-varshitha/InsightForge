@@ -37,7 +37,7 @@ export default function ComparePage() {
   const { data: reports = [], isLoading: reportsLoading } = useQuery({
     queryKey: ['readyReports'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/reports');
+      const res = await axios.get('${API_URL}/api/reports');
       return res.data.filter((r: any) => r.status === 'Ready');
     },
   });
@@ -45,7 +45,7 @@ export default function ComparePage() {
   // 2. Comparison Mutation
   const compareMutation = useMutation({
     mutationFn: async (reportIds: number[]) => {
-      const res = await axios.post('http://localhost:5000/api/reports/compare', { reportIds });
+      const res = await axios.post('${API_URL}/api/reports/compare', { reportIds });
       return res.data;
     },
     onSuccess: (data) => {

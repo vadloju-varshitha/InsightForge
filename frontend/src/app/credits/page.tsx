@@ -34,7 +34,7 @@ export default function CreditsPage() {
   const { data: history = [], isLoading: historyLoading } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/credits/history');
+      const res = await axios.get('${API_URL}/api/credits/history');
       return res.data;
     },
   });
@@ -59,7 +59,7 @@ export default function CreditsPage() {
 
     try {
       // Step A: Create order on backend
-      const orderRes = await axios.post('http://localhost:5000/api/credits/order', {
+      const orderRes = await axios.post('${API_URL}/api/credits/order', {
         amount: tier.price,
         credits: tier.credits,
       });
@@ -77,7 +77,7 @@ export default function CreditsPage() {
         handler: async function (response: any) {
           // Callback on successful payment
           try {
-            const verifyRes = await axios.post('http://localhost:5000/api/credits/verify', {
+            const verifyRes = await axios.post('${API_URL}/api/credits/verify', {
               razorpayOrderId: response.razorpay_order_id,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,

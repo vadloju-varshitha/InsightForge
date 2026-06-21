@@ -29,7 +29,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-
+const API_URL=process.env.NEXT_PUBLIC_API_URL;
 const COLORS = ['#1E3A8A', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
 
 export default function AdminSuitePage() {
@@ -47,7 +47,7 @@ export default function AdminSuitePage() {
   const { data: usersList = [], isLoading: usersLoading } = useQuery({
     queryKey: ['adminUsers'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/admin/users');
+      const res = await axios.get('${API_URL}/api/admin/users');
       return res.data;
     },
     enabled: user?.role === 'ADMIN',
@@ -57,7 +57,7 @@ export default function AdminSuitePage() {
   const { data: auditLogs = [], isLoading: auditsLoading } = useQuery({
     queryKey: ['adminAudits'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/admin/audit-logs');
+      const res = await axios.get('${API_URL}/api/admin/audit-logs');
       return res.data;
     },
     enabled: user?.role === 'ADMIN',
@@ -67,7 +67,7 @@ export default function AdminSuitePage() {
   const { data: notificationLogs = [], isLoading: notificationsLoading } = useQuery({
     queryKey: ['adminNotifications'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/admin/notification-logs');
+      const res = await axios.get('${API_URL}/api/admin/notification-logs');
       return res.data;
     },
     enabled: user?.role === 'ADMIN',
@@ -77,7 +77,7 @@ export default function AdminSuitePage() {
   const { data: analytics = null, isLoading: analyticsLoading } = useQuery({
     queryKey: ['adminAnalytics'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/api/admin/analytics');
+      const res = await axios.get('${API_URL}/api/admin/analytics');
       return res.data;
     },
     enabled: user?.role === 'ADMIN',
@@ -86,7 +86,7 @@ export default function AdminSuitePage() {
   // 5. Suspend User Mutation
   const suspendUserMutation = useMutation({
     mutationFn: async (id: number) => {
-      await axios.post(`http://localhost:5000/api/admin/users/${id}/suspend`);
+      await axios.post(`${API_URL}/api/admin/users/${id}/suspend`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminUsers'] });
@@ -97,7 +97,7 @@ export default function AdminSuitePage() {
   const adjustCreditsMutation = useMutation({
     mutationFn: async () => {
       if (!targetUserId) return;
-      await axios.post('http://localhost:5000/api/admin/credits/adjust', {
+      await axios.post('${API_URL}/api/admin/credits/adjust', {
         userId: Number(targetUserId),
         amount: creditAmount,
         reason: adjustReason,
