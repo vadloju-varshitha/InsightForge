@@ -55,12 +55,6 @@ export default function ReportDetailPage() {
   const [sortOrder, setSortOrder] = useState('asc');
   const [isSaved, setIsSaved] = useState(false);
 
-  useEffect(() => {
-    if (report?.business_type) {
-      setActiveCategory(report.business_type);
-    }
-  }, [report]);
-
   // 1. Fetch Report Details
   const { data: report, isLoading: reportLoading, error: reportError } = useQuery({
     queryKey: ['report', id],
@@ -70,6 +64,11 @@ export default function ReportDetailPage() {
     },
     enabled: !!id,
   });
+   useEffect(() => {
+    if (report?.business_type) {
+      setActiveCategory(report.business_type);
+    }
+  }, [report]);
 
   // Extract locality and city names
   let city = 'Hyderabad';
