@@ -111,6 +111,8 @@ export default function ReportDetailPage() {
     },
     enabled: !!report && !!activeCategory,
   });
+  console.log(report);
+  console.log(activeCategory);
 
   // Check if location is already saved in library
   const { data: savedLocations = [] } = useQuery({
@@ -147,7 +149,7 @@ export default function ReportDetailPage() {
           setIsSaved(false);
         }
       } else {
-        await await axios.post('https://insightforge-2.onrender.com/api/reports/saved', {
+          await axios.post('https://insightforge-2.onrender.com/api/reports/saved', {
           name: report.location_name,
           latitude: report.latitude,
           longitude: report.longitude,
