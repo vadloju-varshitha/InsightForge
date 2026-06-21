@@ -84,11 +84,8 @@ export default function NewReportPage() {
     setIsSearching(true);
     try {
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(val)}&countrycodes=in&limit=5`;
-      const res = await axios.get(url, {
-        headers: {
-          'Accept-Language': 'en-US,en;q=0.9',
-        },
-      });
+      const res = await axios.get(`https://corsproxy.io/?${encodeURIComponent}`
+      );
       setSearchResults(res.data || []);
       setShowDropdown(true);
     } catch (err) {
