@@ -50,7 +50,7 @@ export async function uploadReportPDF(reportId: number, buffer: Buffer): Promise
   const filePath = path.join(uploadDir, fileName);
   fs.writeFileSync(filePath, buffer);
 
-  const localUrl = `http://localhost:5000/uploads/${fileName}`;
+  const localUrl = `https://insightforge-2.onrender.com${fileName}`;
   console.log(`Uploaded report ${reportId} to local storage: ${localUrl}`);
   return localUrl;
 }
